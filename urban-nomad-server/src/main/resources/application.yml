@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+spring:
+  security:
+    user:
+      name: user
+      password: 1234
+
+tourapi:
+  service-key: "P9YXb%2F3h8ermD%2Fk7PUtO1%2F0e%2FgmVB%2FUecLIMj0VGsEchdFyDk036jZJD0s3g8QySV0q468ojFOBGbVCVsXMkmA%3D%3D"
+
+naver:
+  map:
+    client_id: hngdz6vlfg
+    client_secret: pknyV10MIPKqMECzvQeOeZ0UlPBW1G9YDdFeE0Pl

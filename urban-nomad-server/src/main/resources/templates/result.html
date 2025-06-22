@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <!-- Left Panel - Map -->
+    <div class="map-panel">
+        <div class="map-header header">
+            <h2 class="map-title">Travel Map</h2>
+            <div class="map-controls">
+                <button class="control-btn" id="centerBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                </button>
+                <button class="control-btn" id="refreshBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 4 23 10 17 10"/>
+                        <polyline points="1 20 1 14 7 14"/>
+                        <path d="m3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="map" class="map-container"></div>
+        <div class="map-footer">
+            <div class="location-info">
+                <span class="location-text" id="currentLocation">@ Urban Nomad</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Panel - Data -->
+    <div class="data-panel">
+        <div class="data-header header">
+            <h2 class="data-title">Travel Data</h2>
+            <div class="data-stats">
+                <span class="stat-item">
+                    <span class="stat-value" th:text="${#lists.size(locations)}">0</span>
+                    <span class="stat-label">Locations</span>
+                </span>
+            </div>
+        </div>
+
+        <div class="data-content">
+<!--            <div class="search-bar">-->
+<!--                <label for="searchInput"></label>-->
+<!--                <input type="text" placeholder="Search locations..." class="search-input" id="searchInput">-->
+<!--                <button class="search-btn">-->
+<!--                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">-->
+<!--                        <circle cx="11" cy="11" r="8"/>-->
+<!--                        <path d="m21 21-4.35-4.35"/>-->
+<!--                    </svg>-->
+<!--                </button>-->
+<!--            </div>-->
+
+            <div class="location-list" id="locationList">
+                <div th:each="location : ${locations}" class="location-card"
+                     th:data-lat="${location.latitude}"
+                     th:data-lng="${location.longitude}"
+                     th:data-id="${location.id}">
+
+                    <div class="location-card-layout">
+                        <!-- Content Section - Left -->
+                        <div class="location-content">
+                            <div class="location-header">
+                                <h3 class="location-name" th:text="${location.name}">Location Name</h3>
+                            </div>
+
+                            <div class="location-details">
+                                <div class="detail-row">
+                                    <span class="detail-label">ID:</span>
+                                    <span class="detail-value" th:text="${location.id}">Address</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Address:</span>
+                                    <span class="detail-value" th:text="${location.address}">Address</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Coordinates:</span>
+                                    <span class="detail-value" th:text="${location.latitude} + ', ' + ${location.longitude}">Coordinates</span>
+                                </div>
+                                <div class="detail-row" th:if="${location.description}">
+                                    <span class="detail-label">Description:</span>
+                                    <span class="detail-value" th:text="${location.description}">Description</span>
+                                </div>
+                            </div>
+
+                            <div class="location-actions">
+                                <button class="action-btn primary open-navermap-btn"
+                                        th:data-address="${location.address}">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                        <circle cx="12" cy="10" r="3"/>
+                                    </svg>
+                                    View in Naver Map
+                                </button>
+                                <button class="action-btn secondary remove-btn" th:data-id="${location.id}">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                        <path d="m18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                    </svg>
+                                    Remove
+                                </button>
+                                <button class="action-btn third view-image-btn" th:data-img="${location.imageUrl}">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
+                                        <circle cx="12" cy="13" r="3"/>
+                                    </svg>
+                                    View Image
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Image Section - Right -->
+                        <div class="location-image-large">
+                            <div th:if="${location.imageUrl}" class="image-container-large">
+                                <img th:src="${location.imageUrl}" th:alt="${location.name}" class="location-img-large">
+                                <div class="image-overlay"></div>
+                            </div>
+                            <div th:unless="${location.imageUrl}" class="image-placeholder-large">
+                                <div class="placeholder-content-large">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+                                        <circle cx="9" cy="9" r="2"/>
+                                        <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+                                    </svg>
+                                    <span class="placeholder-text-large">No Image Available</span>
+                                </div>
+                            </div>
+                            <!-- 🔴 'active' 필드가 없으므로 상태 배지 제거 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 📌 이미지 보기 모달 -->
+<div id="imageModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span id="modalCloseBtn" class="close">&times;</span>
+        <img id="modalImage" src="" alt="Location Image" style="max-width: 100%; height: auto;">
+    </div>
+</div>
+
+
+<script th:src="@{/js/travel-data.js}"></script>
+<script th:src="@{/js/script.js}"></script>
+<script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=l06q0v13ae&callback=initMap"></script>
+
+<script th:inline="javascript">
+    // Thymeleaf에서 JavaScript로 데이터 전달
+    window.locationData = /*[[${locations}]]*/ [];
+    window.mapCenter = {
+        lat: /*[[${mapCenter.latitude}]]*/ 37.5665,
+        lng: /*[[${mapCenter.longitude}]]*/ 126.9780
+    };
+
+    function initMap() {
+        var mapDiv = document.getElementById('map');
+        var map = new naver.maps.Map(mapDiv, {
+            center: new naver.maps.LatLng(37.3595704, 127.105399),
+            zoom: 13,
+            minZoom: 7,
+            zoomControl: false,
+            zoomControlOptions: {
+                position: naver.maps.Position.TOP_RIGHT
+            },
+            disableKineticPan: false,
+        });
+    }
+</script>
+</body>
+</html>
