@@ -335,7 +335,6 @@ body {
     height: 100%;
     position: relative;
     overflow: hidden;
-    group: true;
 }
 
 .location-img-large {

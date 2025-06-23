@@ -156,34 +156,62 @@
 <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=l06q0v13ae"></script>
 <!--<script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=l06q0v13ae&callback=initMap"></script>-->
 
-
+<script th:src="@{/js/naver-map.js}"></script>
 <script th:inline="javascript">
 
     window.waypoints = JSON.parse([[${locationsJson}]]);
 
     console.log(window.waypoints);
 
-    window.mapCenter = {
-        lat: 37.5665,
-        lng: 126.9780
-    };
-
-    function initMap() {
-        var mapDiv = document.getElementById('map');
-        var map = new naver.maps.Map(mapDiv, {
-            center: new naver.maps.LatLng(37.3595704, 127.105399),
-            zoom: 13,
-            minZoom: 7,
-            zoomControl: false,
-            zoomControlOptions: {
-                position: naver.maps.Position.TOP_RIGHT
-            },
-            disableKineticPan: false,
-        });
+    class Waypoint {
+        constructor(id, name, address, latitude, longitude, description, imageUrl) {
+            this.id = id;
+            this.name = name;
+            this.address = address;
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.description = description;
+            this.imageUrl = imageUrl;
+        }
     }
 
-</script>
+    const waypointObjects = window.waypoints.map(wp =>
+        new Waypoint(
+            wp.id,
+            wp.name,
+            wp.address,
+            wp.latitude,
+            wp.longitude,
+            wp.description,
+            wp.imageUrl
+        )
+    );
 
+    waypointObjects.forEach(wp => {
+        console.log(wp.name, wp.latitude, wp.longitude);
+    });
+
+    window.wwaypointObjects = waypointObjects;
+
+
+</script>
+<script>
+    const mapList = window.wwaypointObjects;
+    const departure = mapList[0];
+    const departureLat = departure.latitude;
+    const departureLng = departure.longitude;
+
+    var map = new naver.maps.Map('map', {
+        center: new naver.maps.LatLng(departureLat, departureLng),
+        zoom: 13,
+        minZoom: 7,
+        zoomControl: false,
+        zoomControlOptions: {
+            position: naver.maps.Position.TOP_RIGHT
+        },
+        disableKineticPan: false,
+    });
+</script>
 
 </body>
 </html>
