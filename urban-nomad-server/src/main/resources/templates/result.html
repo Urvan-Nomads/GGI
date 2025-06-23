@@ -197,13 +197,14 @@
 </script>
 <script>
     const mapList = window.wwaypointObjects;
-    const departure = mapList[0];
-    const departureLat = departure.latitude;
-    const departureLng = departure.longitude;
+
+    const middleLat = mapList.reduce((sum, item) => sum + item.latitude, 0) / mapList.length;
+    const middleLng = mapList.reduce((sum, item) => sum + item.longitude, 0) / mapList.length;
+
 
     var map = new naver.maps.Map('map', {
-        center: new naver.maps.LatLng(departureLat, departureLng),
-        zoom: 13,
+        center: new naver.maps.LatLng(middleLat, middleLng),
+        zoom: 7,
         minZoom: 7,
         zoomControl: false,
         zoomControlOptions: {
@@ -211,6 +212,24 @@
         },
         disableKineticPan: false,
     });
+
+    for (let i = 0; i < mapList.length; i++){
+        let position = mapList[i];
+        let marker = new naver.maps.Marker({
+            position: new naver.maps.LatLng(position.latitude, position.longitude),
+            map: map
+        });
+
+
+    }
+
+    const path = mapList.map(item => new naver.maps.LatLng(item.latitude, item.longitude));
+
+    var polyline = new naver.maps.Polyline({
+        map: map,
+        path: path
+    });
+
 </script>
 
 </body>
