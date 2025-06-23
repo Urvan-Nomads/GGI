@@ -32,7 +32,13 @@ public class RouteService {
     @Getter
     private List<Waypoint> waypoints = new ArrayList<>();
 
-    // 출발지 저장
+    @Getter
+    private List<Waypoint> fullWaypoints = new ArrayList<>();
+
+    @Getter
+    private Waypoint departure;
+
+    // 출발지 저장 (list의 0번 index 에 저장)
     public boolean setDeparture(String address) {
         // 출발지가 이미 설정되어 있으면 변경하지 않음
         if (!waypoints.isEmpty() && waypoints.get(0).getId() == 0) {
@@ -46,7 +52,7 @@ public class RouteService {
         Double lat = Double.parseDouble(addr.getY());
         Double lng = Double.parseDouble(addr.getX());
 
-        Waypoint departure = new Waypoint(
+        departure = new Waypoint(
                 0,
                 "출발지",
                 address,
@@ -91,8 +97,6 @@ public class RouteService {
         return null;
     }
 
-
-
     public boolean addWaypointByContentId(int contentId) {
         // 출발지(contentId=0)는 중복 체크에서 제외, 나머지 중복 체크
         for (int i = 1; i < waypoints.size(); i++) {
@@ -113,7 +117,6 @@ public class RouteService {
 
         return true;
     }
-
 
     public Waypoint fetchWaypointFromApi(int contentId) {
         try {
@@ -166,8 +169,8 @@ public class RouteService {
     }
 
 
-    // 종료
-    public void done() {
+    // 경로 재계산 (greedy)
+    public void greedy() {
         Waypoint departure = waypoints.get(0);
 
         System.out.println("=== done() 호출 전 waypoints 순서 ===");
@@ -216,6 +219,12 @@ public class RouteService {
 //        clear();
     }
 
+    public void excludeDeparture(){
+        waypoints.remove(0);
+
+        System.out.println("=== excludeDeparture 이후 ===");
+        printWaypoints(waypoints);
+    }
 
     private double haversine(double lat1, double lng1, double lat2, double lng2) {
         final int R = 6371;
@@ -231,6 +240,13 @@ public class RouteService {
     public void clear() {
         waypoints.clear();
     }
+
+
+    public void makeFullWaypoints() {
+        fullWaypoints.add(departure);
+        fullWaypoints.addAll(waypoints);
+    }
+
 
     private void printWaypoints(List<Waypoint> list) {
         for (int i = 0; i < list.size(); i++) {

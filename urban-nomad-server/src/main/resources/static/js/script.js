@@ -7,10 +7,10 @@ class LocationDashboard {
     }
 
     init() {
-        this.initMap()
-        this.bindEvents()
-        this.loadLocations()
-        this.initSearch()
+        // this.initMap()
+        // this.bindEvents()
+        // this.loadLocations()
+        // this.initSearch()
     }
 
     initMap() {
@@ -198,35 +198,17 @@ class LocationDashboard {
         document.getElementById("currentLocation").textContent = locationText
     }
 
-    initSearch() {
-        const searchInput = document.getElementById("searchInput")
-        const locationCards = document.querySelectorAll(".location-card")
 
-        searchInput.addEventListener("input", (e) => {
-            const searchTerm = e.target.value.toLowerCase()
-
-            locationCards.forEach((card) => {
-                const locationName = card.querySelector(".location-name").textContent.toLowerCase()
-                const locationAddress = card.querySelector(".detail-value").textContent.toLowerCase()
-
-                if (locationName.includes(searchTerm) || locationAddress.includes(searchTerm)) {
-                    card.style.display = "block"
-                } else {
-                    card.style.display = "none"
-                }
-            })
-        })
-    }
 }
 
 // Global function for Thymeleaf onclick
-// window.showOnMap = (lat, lng) => {
-//     if (window.dashboard) {
-//         window.dashboard.showOnMap(lat, lng)
-//     }
-// }
-//
-// // Initialize when DOM is loaded
-// document.addEventListener("DOMContentLoaded", () => {
-//     window.dashboard = new LocationDashboard()
-// })
+window.showOnMap = (lat, lng) => {
+    if (window.dashboard) {
+        window.dashboard.showOnMap(lat, lng)
+    }
+}
+
+// Initialize when DOM is loaded
+document.addEventListener("DOMContentLoaded", () => {
+    window.dashboard = new LocationDashboard()
+})

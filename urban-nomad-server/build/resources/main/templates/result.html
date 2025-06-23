@@ -74,22 +74,22 @@
                             </div>
 
                             <div class="location-details">
-                                <div class="detail-row">
-                                    <span class="detail-label">ID:</span>
-                                    <span class="detail-value" th:text="${location.id}">Address</span>
-                                </div>
+<!--                                <div class="detail-row">-->
+<!--                                    <span class="detail-label">ID:</span>-->
+<!--                                    <span class="detail-value" th:text="${location.id}">Address</span>-->
+<!--                                </div>-->
                                 <div class="detail-row">
                                     <span class="detail-label">Address:</span>
                                     <span class="detail-value" th:text="${location.address}">Address</span>
                                 </div>
-                                <div class="detail-row">
-                                    <span class="detail-label">Coordinates:</span>
-                                    <span class="detail-value" th:text="${location.latitude} + ', ' + ${location.longitude}">Coordinates</span>
-                                </div>
-                                <div class="detail-row" th:if="${location.description}">
-                                    <span class="detail-label">Description:</span>
-                                    <span class="detail-value" th:text="${location.description}">Description</span>
-                                </div>
+<!--                                <div class="detail-row">-->
+<!--                                    <span class="detail-label">Coordinates:</span>-->
+<!--                                    <span class="detail-value" th:text="${location.latitude} + ', ' + ${location.longitude}">Coordinates</span>-->
+<!--                                </div>-->
+<!--                                <div class="detail-row" th:if="${location.description}">-->
+<!--                                    <span class="detail-label">Description:</span>-->
+<!--                                    <span class="detail-value" th:text="${location.description}">Description</span>-->
+<!--                                </div>-->
                             </div>
 
                             <div class="location-actions">
@@ -153,14 +153,19 @@
 
 <script th:src="@{/js/travel-data.js}"></script>
 <script th:src="@{/js/script.js}"></script>
-<script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=l06q0v13ae&callback=initMap"></script>
+<script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=l06q0v13ae"></script>
+<!--<script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=l06q0v13ae&callback=initMap"></script>-->
+
 
 <script th:inline="javascript">
-    // Thymeleaf에서 JavaScript로 데이터 전달
-    window.locationData = /*[[${locations}]]*/ [];
+
+    window.waypoints = JSON.parse([[${locationsJson}]]);
+
+    console.log(window.waypoints);
+
     window.mapCenter = {
-        lat: /*[[${mapCenter.latitude}]]*/ 37.5665,
-        lng: /*[[${mapCenter.longitude}]]*/ 126.9780
+        lat: 37.5665,
+        lng: 126.9780
     };
 
     function initMap() {
@@ -176,6 +181,9 @@
             disableKineticPan: false,
         });
     }
+
 </script>
+
+
 </body>
 </html>
