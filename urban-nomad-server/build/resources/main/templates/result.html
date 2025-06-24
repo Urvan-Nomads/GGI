@@ -74,10 +74,10 @@
                             </div>
 
                             <div class="location-details">
-<!--                                <div class="detail-row">-->
-<!--                                    <span class="detail-label">ID:</span>-->
-<!--                                    <span class="detail-value" th:text="${location.id}">Address</span>-->
-<!--                                </div>-->
+                                <div class="detail-row">
+                                    <span class="detail-label">ID:</span>
+                                    <span class="detail-value" th:text="${location.id}">Address</span>
+                                </div>
                                 <div class="detail-row">
                                     <span class="detail-label">Address:</span>
                                     <span class="detail-value" th:text="${location.address}">Address</span>
@@ -157,6 +157,7 @@
 <!--<script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=l06q0v13ae&callback=initMap"></script>-->
 
 <script th:src="@{/js/naver-map.js}"></script>
+<!-- 인라인 스크립트로 spring template -> js 객체 생성 -->
 <script th:inline="javascript">
 
     window.waypoints = JSON.parse([[${locationsJson}]]);
@@ -195,40 +196,63 @@
 
 
 </script>
-<script>
-    const mapList = window.wwaypointObjects;
 
-    const middleLat = mapList.reduce((sum, item) => sum + item.latitude, 0) / mapList.length;
-    const middleLng = mapList.reduce((sum, item) => sum + item.longitude, 0) / mapList.length;
+<script>
+    const positions = window.wwaypointObjects.map(wwp => new naver.maps.LatLng(wwp.latitude, wwp.longitude));
 
 
     var map = new naver.maps.Map('map', {
-        center: new naver.maps.LatLng(middleLat, middleLng),
+        center: positions[0],
         zoom: 7,
-        minZoom: 7,
-        zoomControl: false,
+        // minZoom: 7,
+        zoomControl: true,
         zoomControlOptions: {
-            position: naver.maps.Position.TOP_RIGHT
+            position: naver.maps.Position.TOP_LEFT
         },
         disableKineticPan: false,
     });
 
-    for (let i = 0; i < mapList.length; i++){
-        let position = mapList[i];
-        let marker = new naver.maps.Marker({
-            position: new naver.maps.LatLng(position.latitude, position.longitude),
+    for (let i = 0; i < positions.length; i++) {
+        new naver.maps.Marker({
+            position: positions[i],
             map: map
         });
-
-
     }
 
-    const path = mapList.map(item => new naver.maps.LatLng(item.latitude, item.longitude));
+
+
+
+    var bounds = new naver.maps.LatLngBounds();
+    for (var i = 0; i < positions.length; i++) {
+        bounds.extend(positions[i]);
+    }
+
+    if (positions.length === 1) {
+        map.setCenter(positions[0]);
+        map.setZoom(9);
+    } else {
+        map.fitBounds(bounds);
+    }
 
     var polyline = new naver.maps.Polyline({
         map: map,
-        path: path
+        path: positions,
+        strokeColor: '#067fec',
+        strokeWeight: 4,
+
     });
+
+
+    // 폴리라인은 idle 이벤트에서 한 번만 생성하도록 처리
+    // naver.maps.Event.once(map, 'idle', function() {
+    //     var polyline = new naver.maps.Polyline({
+    //         map: map,
+    //         path: positions,
+    //         strokeColor: '#41e8fc',
+    //         strokeWeight: 4,
+    //     });
+    //
+    // });
 
 </script>
 

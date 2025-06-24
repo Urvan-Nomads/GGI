@@ -104,7 +104,7 @@ public class RouteService {
                 return false;
             }
         }
-        if (waypoints.size() >= 6) { // 출발지+최대 5개
+        if (waypoints.size() >= 11) { // 출발지+최대 10개
             return false;
         }
         Waypoint waypoint = fetchWaypointFromApi(contentId);
