@@ -12,6 +12,10 @@ Urban Nomad Server는 한국관광공사와 원티드랩이 주관한 프롬프�
 
 (썸네일을 클릭하면 데모 영상을 시청할 수 있습니다.)
 
+## 시스템 아키텍처
+
+![System Architecture Diagram](Architecture%20Diagram.png)
+
 ## 주요 기능
 
 -   **자연어 기반 여행지 추천:** 사용자와의 채팅을 통해 원하는 여행 스타일, 관심사, 지역 등을 파악하고 맞춤형 여행지를 추천합니다. (LaaS)
