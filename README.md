@@ -14,7 +14,7 @@ Urban Nomad Server는 한국관광공사와 원티드랩이 주관한 프롬프�
 
 ## 시스템 아키텍처
 
-![System Architecture Diagram](Architecture%20Diagram.png)
+![System Architecture Diagram](./System%20Architecture%20Diagram.png)
 
 ## 주요 기능
 
